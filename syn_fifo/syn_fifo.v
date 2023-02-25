@@ -4,18 +4,17 @@ module fifo(DATAOUT, full, empty, clock, reset, wn, rn, DATAIN);
   input [7:0] DATAIN;
   input clock, reset, wn, rn; 
   
-  reg [2:0] wptr, rptr; 
+  reg [1023:0] wptr, rptr; 
   reg [7:0] memory [1023:0]; 
   
-  assign full = ( {(~wptr[1023],wptr[1022:0]}  == (rptr[1023:0])) ? 1 : 0 );
+  assign full = ({~wptr[1023],wptr[1022:0]}  == rptr[1023:0] ? 1 : 0 );
   assign empty = (wptr == rptr) ? 1 : 0;
   
   always @(posedge clock)
   begin
     if (reset)
       begin
-        memory[0] <= 0; memory[1] <= 0; memory[2] <= 0; memory[3] <= 0;
-        memory[4] <= 0; memory[5] <= 0; memory[6] <= 0; memory[7] <= 0;
+        memory[1023:0]<=0;
         DATAOUT <= 0; wptr <= 0; rptr <= 0;
       end
     else if (wn & !full)
