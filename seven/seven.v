@@ -1,18 +1,15 @@
 module seven(d,clk,enable,q);
- wire zero;
-  input d,clk,enable;
+input d,clk,enable;
   output reg q;
   reg mux_o;
-  assign zero=q;
-  initial
+ always@(*)
     begin
-      case(enable)
-        0:mux_o=zero;
-        1:mux_o=d;
-      endcase
+      if(!enable)
+        mux_o=q;
+      else
+        mux_o=d;
     end
-    always@(posedge clk)
-      q<=mux_o;
+  always@(posedge clk)
+      q=mux_o;
 endmodule
-      
       
